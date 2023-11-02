@@ -42,7 +42,7 @@ AND a.product_id = b.product_id
 
 --------91m 2s 1.6Tb (DEV)
 --247m  2.26Tb  41.266.980.968row (PROD)
-INSERT INTO nk.br_cert_min_maxp
+INSERT INTO nk.br_cert_min_maxp_old_code
 (ent_region_id,
  product_id,
  count_part,
@@ -70,7 +70,7 @@ SELECT
  CASE WHEN a_MAX_weight <  b_MAX_weight THEN a_MAX_weight ELSE b_MAX_weight END AS minMAX,
  CASE WHEN a_AVG_weight >= b_AVG_weight THEN a_AVG_weight ELSE b_AVG_weight END AS maxAVG,
  CASE WHEN a_AVG_weight <  b_AVG_weight THEN a_AVG_weight ELSE b_AVG_weight END AS minAVG
-FROM nk.br_cert_JOINp
+FROM nk.br_cert_JOINp_old_code
 WHERE a_AVG_weight > 0
 AND   a_MAX_weight > 0
 AND   b_AVG_weight > 0
@@ -78,7 +78,7 @@ AND   b_MAX_weight > 0
 
 
 ---- 706m 2s 1475Gb 19.7 mlrd
-INSERT  INTO nk.br_cert_row_nump
+INSERT  INTO nk.br_cert_row_nump_old_code
 (ent_region_id,
  product_id,
  a_ent_id,
@@ -101,7 +101,7 @@ SELECT ent_region_id, product_id, a_ent_id, b_ent_id, a_AVG_weight, a_MAX_weight
        minAVG / maxAVG as koefAVG,
        ROW_NUMBER() OVER (PARTITION BY ent_region_id, product_id, a_ent_id ORDER BY (minMAX / maxMAX) DESC) AS row_num_koefMAX,
        ROW_NUMBER() OVER (PARTITION BY ent_region_id, product_id, a_ent_id ORDER BY (minAVG / maxAVG) DESC) AS row_num_koefAVG
-FROM nk.br_cert_min_maxp
+FROM nk.br_cert_min_maxp_old_code
 WHERE maxMAX > 0
 AND   maxAVG > 0
 
